@@ -2,6 +2,10 @@
 
 INFN course
 
+    https://hub.docker.com/
+
+    container e' l'immagine che viene instanziata
+
 Basis
 ====
 
@@ -148,14 +152,89 @@ docker volume prune
 
 
 
+
+
+    docker volume create db_data
+    docker container run -d --name db \
+	--mount type=volume,source=db_data,destination=/var/lib/mysql \
+	--env MYSQL_RANDOM_ROOT_PASSWORD="1" \
+	--env MYSQL_DATABASE=wordpress \
+	--env MYSQL_USER=wordpress-user \
+	--env MYSQL_PASSWORD=wordpress-password \
+	mariadb:10.6.4-focal
+
+    #docker container inspect db | grep IPAddress ....
+    DB_CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' db)
+
+    docker container run -d --name wordpress \
+	-p 80:80 \
+	--env WORDPRESS_DB_HOST=$DB_CONTAINER_IP \
+	--env WORDPRESS_DB_NAME=wordpress \
+	--env WORDPRESS_DB_USER=wordpress-user \
+	--env WORDPRESS_DB_PASSWORD=wordpress-password \
+	wordpress:latest
+
+
+
+
+
+
 Network
 ====
+
+    docker network create my-net
 
     docker network connect my-net my-cont
 
     docker network disconnect my-net my-cont
 
 
+Swarm: overlay network to connect different hosts
+
+
+Challenge:
+
+    docker network create my-net
+
+    docker volume create db_data
+    
+    docker container run -d --name db \
+	--mount type=volume,source=db_data,destination=/var/lib/mysql \
+	--env MYSQL_RANDOM_ROOT_PASSWORD="1" \
+	--env MYSQL_DATABASE=wordpress \
+	--env MYSQL_USER=wordpress-user \
+	--env MYSQL_PASSWORD=wordpress-password \
+	mariadb:10.6.4-focal
+
+    docker network connect my-net db
+
+    docker container run -d --name wordpress \
+	-p 80:80 \
+	--env WORDPRESS_DB_HOST=db \
+	--env WORDPRESS_DB_NAME=wordpress \
+	--env WORDPRESS_DB_USER=wordpress-user \
+	--env WORDPRESS_DB_PASSWORD=wordpress-password \
+	wordpress:latest
+
+
+
+
+Create images
+====
+
+Write a Dockerfile
+
+
+    docker build -t myfiglet .
+
+L'immagine finisce qui:
+
+    sudo ls /var/lib/docker/image/
+
+
+
+Continuous Integration (CI)
+====
 
 
 
