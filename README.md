@@ -1,25 +1,28 @@
 # Docker
 
-Docker
+INFN course
+
+Basis
 ====
 
-docker container run --name blablabla  hello-world
+    docker container run --name blablabla  hello-world
 
 
-docker image ls
+    docker image ls
 
-docker container ps -a
+    docker container ps -a
 
-docker container ps
+    docker container ps
 
-docker system df
+    docker system df
 
-docker image inspect hello-world
+    docker image inspect hello-world
 
 
 
 docker cp: copiare file dall'host dentro il container
-docker cp bla.txt   blablabla:/
+    
+    docker cp bla.txt   blablabla:/
 
 
 Quanto sta nell'immagine NON viene modificato, ed e' condiviso da TUTTI i container
@@ -27,7 +30,7 @@ Quanto sta nell'immagine NON viene modificato, ed e' condiviso da TUTTI i contai
 
 
 
-docker rm  blablabla
+    docker rm  blablabla
 
 
 
@@ -36,30 +39,29 @@ docker container run --name ciccia -it ubuntu bash
 
 
 
-docker start ce7ad8208f0a
+    docker start ce7ad8208f0a
 
-docker attach ce7ad8208f0a
+    docker attach ce7ad8208f0a
 --> attaccare al processo principale
 --> attenzione che questo puo' portare a stoppare il container!
 
 
-docker exec -it ce7ad8208f0a   bash
+    docker exec -it ce7ad8208f0a   bash
 --> faccio partire una nuova bash, nello stesso container
 
-docker exec -it ce7ad8208f0a ls /
+    docker exec -it ce7ad8208f0a ls /
+
+    ps aux
 
 
-ps aux
 
 
-
-
-docker commit blablabla hello-world:MIO
+    docker commit blablabla hello-world:MIO
 --> creo una nuova immagine!!
 --> ok per test, ma poi meglio usare un docker file
 
 
-docker container prune 
+    docker container prune 
 --> remove all stopped containers
 
 
@@ -75,10 +77,10 @@ Variabili d'ambiente
 Data manager
 ====
 
-docker volume create my-vol
+    docker volume create my-vol
 --> finisce qui: /var/lib/docker/volumes/
 
-docker volume ls
+    docker volume ls
 
 docker container run -it --name miocont --mount type=volume,source=my-vol,destination=/tmp/   ubuntu
 
@@ -91,12 +93,7 @@ docker help volume
 
 
 
-
-
-
-
-
-docker container run -d -p 80:80 --name nginx2 nginx
+    docker container run -d -p 80:80 --name nginx2 nginx
 
 
 
@@ -105,11 +102,11 @@ Lab challenge
 ====
 
 
-docker container run -d -p 8080:80 --name mio-wordpress wordpress
+    docker container run -d -p 8080:80 --name mio-wordpress wordpress
 
-docker container run --name mio-mariadb mariadb
+    docker container run --name mio-mariadb mariadb
 
-docker container ps
+    docker container ps
 
 
 Then on chrome go to http://192.168.28.223:8080/
@@ -131,7 +128,7 @@ docker run --detach --name some-mariadb --env MARIADB_USER=example-user --env MA
 docker run --detach -v db_data:/var/lib/mysql --name some-mariadb2 --env MARIADB_USER=example-user --env MARIADB_PASSWORD=my_cool_secret --env MARIADB_ROOT_PASSWORD=my-secret-pw  mariadb:10.6.4-focal
 
 
-docker inspect some-mariadb2
+    docker inspect some-mariadb2
 
 
 --> 172.17.0.4
@@ -141,7 +138,7 @@ docker inspect some-mariadb2
 docker container run -d -p 8081:80 --env WORDPRESS_DB_HOST=172.17.0.4  --env WORDPRESS_DB_USER=example-user  --env WORDPRESS_DB_PASSWORD=my_cool_secret --env WORDPRESS_DB_NAME=db_data  --name mio-wordpress4 wordpress:latest
 
 
---mount type=volume,source=my-vol,destination=/tmp/ 
+    --mount type=volume,source=my-vol,destination=/tmp/ 
 
 
 -e    <---->   --env
@@ -151,7 +148,12 @@ docker volume prune
 
 
 
+Network
+====
 
+    docker network connect my-net my-cont
+
+    docker network disconnect my-net my-cont
 
 
 
